@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyPulse | Histórico</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .historico-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .historico-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .historico-header a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .historico-header a:hover { color: #fff; }
+        .historico-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+        }
+        .hist-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            color: #fff;
+        }
+        .hist-table thead {
+            background: rgba(255,255,255,0.15);
+        }
+        .hist-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.7);
+        }
+        .hist-table td {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.9);
+        }
+        .hist-table tr:hover td {
+            background: rgba(255,255,255,0.05);
+        }
+        .empty-hist {
+            text-align: center;
+            padding: 48px 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+        }
+        .cidade-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            font-size: 13px;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body class="sunny">
+    <div class="bg-circles">
+        <div class="circle" style="width: 400px; height: 400px; top: -100px; right: -100px;"></div>
+        <div class="circle" style="width: 300px; height: 300px; bottom: -50px; left: -50px; animation-delay: -5s;"></div>
+    </div>
+
+    <div class="historico-container">
+        <div class="historico-header">
+            <a href="/"><i data-lucide="arrow-left"></i> Voltar</a>
+            <h1>
+                <i data-lucide="history"></i>
+                Histórico{% if cidade %} — {{ cidade }}{% endif %}
+            </h1>
+        </div>
+
+        {% if registros %}
+        <table class="hist-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Cidade</th>
+                    <th>Data</th>
+                    <th>Umidade</th>
+                    <th>Vento</th>
+                    <th>Precipitação</th>
+                    <th>Mín</th>
+                    <th>Máx</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in registros %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td><span class="cidade-badge">{{ r.cidade }}</span></td>
+                    <td>{{ r.data }}</td>
+                    <td>{{ r.umidade | round(1) if r.umidade else '—' }}%</td>
+                    <td>{{ r.vento | round(1) if r.vento else '—' }} km/h</td>
+                    <td>{{ r.precipitacao | round(1) if r.precipitacao else '0' }} mm</td>
+                    <td>{{ r.temp_min | round(1) if r.temp_min else '—' }}°C</td>
+                    <td>{{ r.temp_max | round(1) if r.temp_max else '—' }}°C</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-hist">
+            <p>Nenhum registro encontrado{% if cidade %} para <strong>{{ cidade }}</strong>{% endif %}.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
