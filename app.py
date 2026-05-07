@@ -9,7 +9,9 @@ load_dotenv()
 app = Flask(__name__)
 
 # Cria a tabela ao iniciar (não faz nada se já existir)
-criar_tabela()
+@app.before_first_request
+def init_db():
+    criar_tabela()
 
 
 @app.route('/', methods=['GET'])
@@ -42,4 +44,4 @@ def historico():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
