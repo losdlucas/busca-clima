@@ -1,15 +1,8 @@
 import os
-import psycopg2
-import psycopg2.extras
-
+import psycopg
 
 def get_connection():
-    database_url = os.environ.get("DATABASE_URL")
-
-    if not database_url:
-        raise RuntimeError("DATABASE_URL não configurada no ambiente!")
-
-    return psycopg2.connect(database_url)
+    return psycopg.connect(os.environ.get("DATABASE_URL"))
 
 def criar_tabela():
     """Cria a tabela historico_clima se ainda não existir."""
