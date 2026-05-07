@@ -8,9 +8,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Cria a tabela ao iniciar (não faz nada se já existir)
-@app.before_first_request
-def init_db():
+# cria a tabela ao iniciar o app (jeito correto no Flask 3)
+with app.app_context():
     criar_tabela()
 
 
@@ -19,7 +18,7 @@ def home():
     cidade = request.args.get('cidade')
     weather = None
     error = None
-    salvo = None  # None = nenhuma busca; True = salvo; False = já existia
+    salvo = None
 
     if cidade:
         result = buscar_clima_por_cidade(cidade)
@@ -41,7 +40,3 @@ def historico():
     cidade = request.args.get('cidade')
     registros = buscar_historico(cidade)
     return render_template('historico.html', registros=registros, cidade=cidade)
-
-
-if __name__ == '__main__':
-    app.run()
