@@ -1,23 +1,15 @@
 import os
-from datetime import datetime
-
 import psycopg2
 import psycopg2.extras
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def get_connection():
-    """Retorna uma conexão com o banco PostgreSQL usando variáveis do .env"""
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", "5432"),
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD")
-    )
+    database_url = os.environ.get("DATABASE_URL")
 
+    if not database_url:
+        raise RuntimeError("DATABASE_URL não configurada no ambiente!")
+
+    return psycopg2.connect(database_url)
 
 def criar_tabela():
     """Cria a tabela historico_clima se ainda não existir."""
